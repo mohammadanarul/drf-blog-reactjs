@@ -13,6 +13,14 @@ class Category(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['name']
     
+    def __str__(self):
+        full_path = [self.name]
+        k = self.parent
+        while k is not None:
+            full_path.append(k.name)
+            k= k.parent
+        return '/'.join(full_path[::-1])
+    
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
